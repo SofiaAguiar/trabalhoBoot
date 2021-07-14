@@ -1,0 +1,49 @@
+---
+title: "<span style='font-size: 32px'>Intervalo de confiança bootstrap básico <br>para a variância populacional</span>"
+author: |
+  | <span style='font-size: 16px'>Aline Cristina (2020031412)</span>
+  | <span style='font-size: 16px'>Herikeli Mendes (2020031560)</span>   
+  | <span style='font-size: 16px'>Marcel Zanetti</span> 
+  | <span style='font-size: 16px'>Renan Machado (2020031773)</span> 
+  | <span style='font-size: 16px'>Sofia Aguiar (2020031811)</span> 
+output: 
+    html_document:
+        highlight: textmate
+        theme: flatly
+        toc: yes
+        toc_float:
+            collapsed: yes
+            smooth_scroll: yes 
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+htmltools::img(src = 'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102013/ufmg_simbolo_vetorizado.jpg', 
+               alt = 'UFMG', 
+               style = 'position:absolute; top:0; right:0; padding: 25px; margin-right:10px;')
+```
+
+---
+
+## Introdução
+
+Lorem ipsum placerat ligula molestie metus habitasse vitae metus laoreet aenean, at augue malesuada dapibus ultricies felis lobortis senectus odio, aliquet elementum felis velit id elementum consectetur leo fusce. sagittis pharetra odio nunc himenaeos ac mollis varius, fermentum diam auctor velit etiam pretium. consectetur vulputate nostra tempor elit curabitur nullam aliquet aliquam, gravida euismod purus quis rutrum euismod duis, rutrum nec elementum auctor phasellus curabitur sit. nostra ligula diam molestie tempus iaculis ullamcorper pulvinar pharetra turpis est accumsan, hac etiam eleifend ligula senectus etiam quisque curabitur lorem. mollis proin etiam proin ligula dolor aenean quisque, hendrerit vitae vivamus at lorem convallis, libero ultrices maecenas semper lectus consequat. 
+
+## Estudo de simulação
+
+Lorem ipsum cras mattis euismod fames sit phasellus, viverra eros dui odio imperdiet fames torquent rhoncus eu, aliquet adipiscing fusce blandit orci ante dapibus. integer porttitor vehicula senectus malesuada fermentum quisque sed per purus, pharetra elementum tincidunt euismod habitasse vitae tempor dapibus, lacinia aliquam leo fermentum blandit accumsan interdum lorem, proin non conubia vehicula sapien maecenas eget cras consectetur porttitor dolor ac lobortis, torquent accumsan cursus luctus ultricies condimentum neque ullamcorper egestas sit fusce. urna ultricies elit ligula phasellus habitant habitasse urna morbi, ad netus velit fusce eros felis adipiscing vestibulum hac, volutpat nunc urna quisque eu ut lobortis. 
+
+Este é um teste para equações no rmarkdown
+$$mean(X) = \frac{\sum_{i=1}^n X}{n}$$
+
+## Apêndice
+
+#### Code 1
+
+    for (i in 1:10){
+        print('Lorem ipsum')
+    }
