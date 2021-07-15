@@ -73,11 +73,62 @@ resultados_gerais <- tibble(
 
 # Binomial
 
+var_binom=function(n,p){
+  return(n * p * (1 - p))
+}
+
+binomial_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(binomial_por_n_df$x))
+binomial_por_n <- map(binomial_por_n_df$x, ~{pb$tick(); montecarlo(.x,
+                                                                   rbinom,
+                                                                   theo_val=var_binom(.x, 0.5),
+                                                                   prob=0.5,
+                                                                   size=.x)})
+
+binomial_por_n_df <- binomial_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 1)),
+         param = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 2)))
+
+binomial_100_nvezes <- map(1:10, ~montecarlo(100,
+                                             rbinom,
+                                             theo_val=var_binom(100, 0.5),
+                                             prob=0.5,
+                                             size=100))
+
+binomial_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 2))
+)
+
 # Exponencial
 
+exponencial_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(exponencial_por_n_df$x))
+exponencial_por_n <- map(exponencial_por_n_df$x, ~{pb$tick(); montecarlo(.x,
+                                                                         rexp,
+                                                                         rate=2,
+                                                                         theo_val= .25)})
+
+exponencial_por_n_df <- exponencial_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(exponencial_por_n_df), ~pluck(exponencial_por_n, .x, 1)),
+         param = map_dbl(1:nrow(exponencial_por_n_df), ~pluck(exponencial_por_n, .x, 2)))
+
+exponencial_100_nvezes <- map(1:10, ~montecarlo(100, rexp, rate=2, theo_val= .25))
+
+exponencial_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(exponencial_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(exponencial_100_nvezes, .x, 2))
+)
 
 # Export
 
 save(normal_por_n_df,
      normal_100_nvezes_df,
-     resultados_gerais, file = 'simulacoes.RData')
+     resultados_gerais,
+     binomial_por_n_df,
+     binomial_100_nvezes_df,
+     exponencial_por_n_df,
+     exponencial_100_nvezes_df,
+     file = 'simulacoes.RData')
