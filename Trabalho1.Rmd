@@ -58,16 +58,7 @@ A estimação de variância pela função _varTest_ do pacote _EnvStats_, usada 
 
 Iniciamente, foi feito um gráfico para comparar o desempenho dos métodos com variados tamanhos de amostra: 10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000.
 
-```{r}
-normal_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
-
-pb <- progress_bar$new(total = length(normal_por_n_df$x))
-normal_por_n <- map(normal_por_n_df$x, ~{pb$tick(); montecarlo(.x, rnorm, 1)})
-
-normal_por_n_df <- normal_por_n_df %>% 
-  mutate(bootstrap = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 1)),
-         param = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 2)))
-
+```{r gráfico 2}
 normal_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -83,14 +74,7 @@ normal_por_n_df %>%
 
 Depois, foram feitas 10 diferentes execuções de Monte Carlo usando uma amostra pequena, de tamanho 100, para testar a estabilidade dos valores apresentados em um cenário levemente desfavorável.
 
-```{r}
-
-normal_100_nvezes <- map(1:10, ~montecarlo(100, rnorm, 1))
-
-normal_100_nvezes_df <- tibble(
-  resultados_boots = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 1)),
-  resultados_param = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 2))
-)
+```{r gráfico 3}
 
 normal_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
@@ -103,13 +87,7 @@ normal_100_nvezes_df %>%
 
 Por fim, para o tamanho 1000, são sintetizados, em uma tabela, os resultados dos métodos paramétrico e não-paramétrico das três distribuições abordadas: normal (padrão), exponencial (com taxa 2) e binomial (com n = 1000 e p = 0.5).
 
-```{r}
-
-resultados_gerais <- tibble(
-  normal = unlist(montecarlo(1000, rnorm, 1)),
-  exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
-  binomial = unlist(montecarlo(1000, rbinom, 250, size = 1000, prob = .5))
-)
+```{r tabela 1}
 
 resultados_gerais %>%
   mutate(Método = c("Bootstrap", "Paramétrico")) %>% 
@@ -180,5 +158,32 @@ montecarlo <- function(n, FUN, theo_val, ...) {
               .001 * nrow(int_confianca[valor %between% list(InfParam, SupParam)]))) # Paramétrico
 
 }
+
+# 3. Gráficos e tabelas ----
+
+# 3.1 Gráfico 2 ----
+normal_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(normal_por_n_df$x))
+normal_por_n <- map(normal_por_n_df$x, ~{pb$tick(); montecarlo(.x, rnorm, 1)})
+
+normal_por_n_df <- normal_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 1)),
+         param = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 2)))
+
+# 3.2 Gráfico 3 ----
+normal_100_nvezes <- map(1:10, ~montecarlo(100, rnorm, 1))
+
+normal_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 2))
+)
+
+# 3.3 Tabela 1 ----
+resultados_gerais <- tibble(
+  normal = unlist(montecarlo(1000, rnorm, 1)),
+  exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
+  binomial = unlist(montecarlo(1000, rbinom, 250, size = 1000, prob = .5))
+)
 
 ```
