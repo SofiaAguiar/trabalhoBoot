@@ -36,7 +36,24 @@ htmltools::img(src = 'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnai
 
 ## Introdução
 
-Lorem ipsum placerat ligula molestie metus habitasse vitae metus laoreet aenean, at augue malesuada dapibus ultricies felis lobortis senectus odio, aliquet elementum felis velit id elementum consectetur leo fusce. sagittis pharetra odio nunc himenaeos ac mollis varius, fermentum diam auctor velit etiam pretium. consectetur vulputate nostra tempor elit curabitur nullam aliquet aliquam, gravida euismod purus quis rutrum euismod duis, rutrum nec elementum auctor phasellus curabitur sit. nostra ligula diam molestie tempus iaculis ullamcorper pulvinar pharetra turpis est accumsan, hac etiam eleifend ligula senectus etiam quisque curabitur lorem. mollis proin etiam proin ligula dolor aenean quisque, hendrerit vitae vivamus at lorem convallis, libero ultrices maecenas semper lectus consequat. 
+Nesse trabalho será realizado uma comparação de desempenho entre uma função bootstrap e a função VarTest (R) 
+
+Segundo Horiwitz (2001) O bootstrap é uma técnica prática que está pronta para uso em aplicações. Esse método estima a distribuição de um estimador ou estatística de teste, resamplando os dados ou um modelo estimado a partir dos dados. Para realizar a comparação do trabalho a seguir foi executada uma função bootstrap com 200 reamostragens, utilizando o método para fazer probabilidades de cobertura de intervalos de confiança básicas para variância populacional. Entretanto a função bootstrap tem diversas outras aplicações como:  econométricas, aproximações às distribuições de estatísticas, e probabilidades de rejeição de testes de hipóteses, entre outras. 
+A função VarTest é uma função paramétrica nativa do R, e ambas foram comparadas para comparação de desempenho.
+
+Para ajudar nessa comparação fez-se necessário  a criação de um mecanismo da programação através da função MonteCarlo. Essa foi realizada em três principais etapas, sendo elas:
+Etapa 1 : Geração de uma amostra  bootstrap de tamanho 200, {Xi *: i = 1, ..., 200}, amostrando a distribuição correspondente a Fn aleatoriamente.
+Etapa 2: Calculando T200* º T200 (X1* ,…, X200*).
+Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 * £ t (ou seja, a proporção de repetições em que esse evento ocorre).
+
+Ele foi aplicado em Tres cenários de distribuição diferentes diferentes:
+- Cenário 1: Distribuição normal:
+
+- Cenário 2: Distribuição Binomial 
+
+- Cenário 3:Distribuição Exponencial 
+
+E em cada cenário da simulação foi considerado três tamanhos amostrais(50,500,5000), para assim obter-se uma comparação entre os cenários, comparar a desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra.
 
 ## Estudo de simulação
 
