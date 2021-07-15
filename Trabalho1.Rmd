@@ -42,8 +42,65 @@ $$mean(X) = \frac{\sum_{i=1}^n X}{n}$$
 
 ## Apêndice
 
-#### Code 1
+#### Código feito para construir as funções Bootstrap e Monte Carlo
 
-    for (i in 1:10){
-        print('Lorem ipsum')
-    }
+```{r, eval=FALSE}
+# Bibliotecas necessárias
+if (!require(pacman)) install.packages('pacman')
+library(pacman)
+pacman::p_load(tidyverse, data.table, EnvStats, progress)
+
+# 1. Função bootstrap para IC básico para variancia populacional, dada uma amostra A----
+# 200 reamostragens e ic de 95% de confiança
+
+bootstrap_varbasica = function(A){
+  
+  thetaPontual = var(A)
+  b = 1
+  B = 200
+  reamostragem = list()
+  reamostragem[[1]] = c(1:B)
+  reamostragem[[2]] = numeric(B)
+  
+  while (b <= B) {
+    b_i = sample(A, length(A), replace = T)
+    thetaBoot = var(b_i)
+    reamostragem[[2]][[b]] = thetaBoot
+    b = b + 1
+  }
+  
+  alfa = 0.05
+  thetaInf = quantile(reamostragem[[2]], alfa/2)
+  thetaSup = quantile(reamostragem[[2]], 1-alfa/2)
+  valorInf = 2*thetaPontual - thetaSup
+  valorSup = 2*thetaPontual - thetaInf
+  return(c(valorInf, valorSup))
+
+}
+
+# 2. Função Monte Carlo para comparar o desempenho da função bootstrap e o método paramétrico----
+
+montecarlo <- function(n, FUN, theo_val, ...) {
+  
+  int_confianca <- data.table(valor = rep(theo_val, 1000),
+                              InfBoot = numeric(1000),
+                              SupBoot = numeric(1000),
+                              InfParam = numeric(1000),
+                              SupParam = numeric(1000))
+  pb <- progress_bar$new(total=1000)
+  
+  for (iter in 1:1000) {
+    amostra_iter <- FUN(n, ...)
+    
+    int_confianca[iter, 2:5] <- data.table(
+      reduce(list(bootstrap_varbasica(amostra_iter),
+                  varTest(amostra_iter)$conf.int[c(1,2)]), c)) %>% transpose()
+     pb$tick()
+  }
+
+  return(list(.001 * nrow(int_confianca[valor %between% list(InfBoot, SupBoot)]), # Bootstrap
+              .001 * nrow(int_confianca[valor %between% list(InfParam, SupParam)]))) # Paramétrico
+
+}
+
+```

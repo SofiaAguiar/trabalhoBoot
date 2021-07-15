@@ -1,9 +1,10 @@
-library(tidyverse)
+# Bibliotecas necessárias
+if (!require(pacman)) install.packages('pacman')
+library(pacman)
+pacman::p_load(tidyverse, data.table, EnvStats)
 
-library(data.table)
-library(EnvStats)
-
-# 1. Função para ic bootstrap básico para uma amostra A, com 200 reamostragem e ic de 90% ----
+# 1. Função bootstrap para IC básico para variancia populacional, dada uma amostra A----
+#v200 reamostragens e ic de 95%
 
 bootstrap_varbasica = function(A){
   thetaPontual = var(A)
@@ -27,7 +28,7 @@ bootstrap_varbasica = function(A){
 
 }
 
-#exemplo da função rodando para uma amostra normal padrao
+#exemplo da função para uma amostra normal padrao
 amostra = rnorm(50)
 bootstrap_varbasica(amostra)
 
