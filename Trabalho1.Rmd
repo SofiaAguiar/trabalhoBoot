@@ -19,6 +19,10 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+if (!require(pacman)) install.packages('pacman')
+library(pacman)
+pacman::p_load(tidyverse, data.table, EnvStats, progress)
+
 ```
 
 ```{r, echo=FALSE}
