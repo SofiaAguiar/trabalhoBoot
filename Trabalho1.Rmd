@@ -3,7 +3,7 @@ title: "<span style='font-size: 32px'>Intervalo de confiança bootstrap básico 
 author: |
   | <span style='font-size: 16px'>Aline Cristina (2020031412)</span>
   | <span style='font-size: 16px'>Herikeli Mendes (2020031560)</span>   
-  | <span style='font-size: 16px'>Marcel Zanetti</span> 
+  | <span style='font-size: 16px'>Marcel Zanetti (2020031706)</span> 
   | <span style='font-size: 16px'>Renan Machado (2020031773)</span> 
   | <span style='font-size: 16px'>Sofia Aguiar (2020031811)</span> 
 output: 
@@ -19,6 +19,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 if (!require(pacman)) install.packages('pacman')
 library(pacman)
 pacman::p_load(tidyverse, data.table, EnvStats, progress)
