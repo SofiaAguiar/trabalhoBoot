@@ -1,10 +1,10 @@
 # Bibliotecas necessárias
 if (!require(pacman)) install.packages('pacman')
 library(pacman)
-pacman::p_load(tidyverse, data.table, EnvStats)
+pacman::p_load(tidyverse, data.table, EnvStats, progress)
 
 # 1. Função bootstrap para IC básico para variancia populacional, dada uma amostra A----
-#v200 reamostragens e ic de 95%
+# 200 reamostragens e ic de 95%
 
 bootstrap_varbasica = function(A){
   thetaPontual = var(A)
@@ -42,6 +42,7 @@ montecarlo <- function(n, FUN, theo_val, ...) {
                               SupBoot = numeric(1000),
                               InfParam = numeric(1000),
                               SupParam = numeric(1000))
+  pb <- progress_bar$new(total=1000)
   
   for (iter in 1:1000) {
     amostra_iter <- FUN(n, ...)
@@ -49,13 +50,11 @@ montecarlo <- function(n, FUN, theo_val, ...) {
     int_confianca[iter, 2:5] <- data.table(
       reduce(list(bootstrap_varbasica(amostra_iter),
                   varTest(amostra_iter)$conf.int[c(1,2)]), c)) %>% transpose()
-     
-    
+    pb$tick()
   }
-
+  
   return(list(.001 * nrow(int_confianca[valor %between% list(InfBoot, SupBoot)]), # Bootstrap
               .001 * nrow(int_confianca[valor %between% list(InfParam, SupParam)]))) # Paramétrico
-
   
 }
 
