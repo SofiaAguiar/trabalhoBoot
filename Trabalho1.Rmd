@@ -22,7 +22,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 if (!require(pacman)) install.packages('pacman')
 library(pacman)
-pacman::p_load(tidyverse, data.table, EnvStats, progress)
+pacman::p_load(tidyverse, data.table, EnvStats, progress, gt)
+
+load('simulacoes.RData')
 
 ```
 
@@ -57,10 +59,6 @@ E em cada cenário da simulação foi considerado três tamanhos amostrais(50,50
 
 ## Estudo de simulação
 
-Lorem ipsum cras mattis euismod fames sit phasellus, viverra eros dui odio imperdiet fames torquent rhoncus eu, aliquet adipiscing fusce blandit orci ante dapibus. integer porttitor vehicula senectus malesuada fermentum quisque sed per purus, pharetra elementum tincidunt euismod habitasse vitae tempor dapibus, lacinia aliquam leo fermentum blandit accumsan interdum lorem, proin non conubia vehicula sapien maecenas eget cras consectetur porttitor dolor ac lobortis, torquent accumsan cursus luctus ultricies condimentum neque ullamcorper egestas sit fusce. urna ultricies elit ligula phasellus habitant habitasse urna morbi, ad netus velit fusce eros felis adipiscing vestibulum hac, volutpat nunc urna quisque eu ut lobortis. 
-
-Este é um teste para equações no rmarkdown
-$$mean(X) = \frac{\sum_{i=1}^n X}{n}$$
 ### Distribuição normal
 
 A distribuição normal tem função de densidade:
