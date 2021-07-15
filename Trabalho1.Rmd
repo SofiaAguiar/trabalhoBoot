@@ -41,6 +41,23 @@ Este é um teste para equações no rmarkdown
 $$mean(X) = \frac{\sum_{i=1}^n X}{n}$$
 ### Distribuição normal
 
+A distribuição normal tem função de densidade:
+$$f(x)=\frac{1}{\sigma\sqrt{2\pi}}\cdot \exp\bigg(-\frac 12 \cdot \frac{(x-\mu )^2}{\sigma^2}\bigg)$$
+Para todo _x_ real, em que $\sigma$ e $\mu$ são, respectivamente, a média e o desvio-padrão. Nas simulações deste trabalho, foi utilizada a normal padrão, i.e., a normal com média 0 e desvio-padrão 1. Um exemplo de gráfico de densidade de probabilidade da distribuição normal:
+
+```{r}
+tibble(x = -4:4) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = dnorm) +
+  labs(title = "Densidade de probabilidade da distribuição normal",
+       x = "x", y = "f(x)")
+
+```
+
+A estimação de variância pela função _varTest_ do pacote _EnvStats_, usada para comparação com o método de Bootstrap, é feita usando um teste de qui-quadrado, que é bastante sensível a desvios de normalidade (em particular se os dados são bastante assimétricos). Como, em geral, métodos paramétricos são mais poderosos que métodos não-paramétricos quando os pressupostos dos primeiros são satisfeitos, é esperado que, aqui, das distribuições testadas, o Bootstrap obtenha a maior desvantagem em relação à função _varTest_. 
+
+Iniciamente, foi feito um gráfico para comparar o desempenho dos métodos com variados tamanhos de amostra: 10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000.
+
 ```{r}
 normal_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
 
@@ -64,6 +81,42 @@ normal_por_n_df %>%
   scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
 ```
 
+Depois, foram feitas 10 diferentes execuções de Monte Carlo usando uma amostra pequena, de tamanho 100, para testar a estabilidade dos valores apresentados em um cenário levemente desfavorável.
+
+```{r}
+
+normal_100_nvezes <- map(1:10, ~montecarlo(100, rnorm, 1))
+
+normal_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 2))
+)
+
+normal_100_nvezes_df %>% 
+  pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
+  ggplot(aes(x = Metodo, y = Resultado)) +
+  geom_point()
+
+```
+
+## Comparação geral
+
+Por fim, para o tamanho 1000, são sintetizados, em uma tabela, os resultados dos métodos paramétrico e não-paramétrico das três distribuições abordadas: normal (padrão), exponencial (com taxa 2) e binomial (com n = 1000 e p = 0.5).
+
+```{r}
+
+resultados_gerais <- tibble(
+  normal = unlist(montecarlo(1000, rnorm, 1)),
+  exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
+  binomial = unlist(montecarlo(1000, rbinom, 250, size = 1000, prob = .5))
+)
+
+resultados_gerais %>%
+  mutate(Método = c("Bootstrap", "Paramétrico")) %>% 
+  select(c(4,1,2,3)) %>% gt() %>% 
+  tab_header(title = md("**Comparação de método Bootstrap e paramétrico para diferentes distribuições**"))
+
+```
 
 ## Apêndice
 
@@ -73,7 +126,7 @@ normal_por_n_df %>%
 # Bibliotecas necessárias
 if (!require(pacman)) install.packages('pacman')
 library(pacman)
-pacman::p_load(tidyverse, data.table, EnvStats, progress)
+pacman::p_load(tidyverse, data.table, EnvStats, progress, gt)
 
 # 1. Função bootstrap para IC básico para variancia populacional, dada uma amostra A----
 # 200 reamostragens e ic de 95% de confiança
