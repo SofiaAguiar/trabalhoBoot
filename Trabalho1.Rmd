@@ -39,6 +39,31 @@ Lorem ipsum cras mattis euismod fames sit phasellus, viverra eros dui odio imper
 
 Este é um teste para equações no rmarkdown
 $$mean(X) = \frac{\sum_{i=1}^n X}{n}$$
+### Distribuição normal
+
+```{r}
+normal_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(normal_por_n_df$x))
+normal_por_n <- map(normal_por_n_df$x, ~{pb$tick(); montecarlo(.x, rnorm, 1)})
+
+normal_por_n_df <- normal_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 1)),
+         param = map_dbl(1:nrow(normal_por_n_df), ~pluck(normal_por_n, .x, 2)))
+
+normal_por_n_df %>%
+  pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
+  mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
+  ggplot(aes(x, valor, color = tipo)) +
+  geom_path() +
+  geom_point() +
+  labs(x = "Tamanho da amostra", y = "Precisão",
+       title = "Precisão da variância em amostras de diferentes tamanhos",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos",
+       colour = "Método") +
+  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
+```
+
 
 ## Apêndice
 
