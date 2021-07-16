@@ -69,7 +69,7 @@ A distribuição normal tem função de densidade:
 $$f(x)=\frac{1}{\sigma\sqrt{2\pi}}\cdot \exp\bigg(-\frac 12 \cdot \frac{(x-\mu )^2}{\sigma^2}\bigg)$$
 Para todo _x_ real, em que $\sigma$ e $\mu$ são, respectivamente, a média e o desvio-padrão. Nas simulações deste trabalho, foi utilizada a normal padrão, i.e., a normal com média 0 e desvio-padrão 1. Um exemplo de gráfico de densidade de probabilidade da distribuição normal:
 
-```{r echo=FALSE} 
+```{r fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE} 
 tibble(x = -4:4) %>% 
   ggplot(aes(x)) +
   stat_function(fun = dnorm) +
@@ -82,7 +82,7 @@ A estimação de variância pela função _varTest_ do pacote _EnvStats_, usada 
 
 Iniciamente, foi feito um gráfico para comparar o desempenho dos métodos com variados tamanhos de amostra: 10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000.
 
-```{r gráfico 2, echo=FALSE}
+```{r gráfico 2, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 normal_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -90,15 +90,15 @@ normal_por_n_df %>%
   geom_path() +
   geom_point() +
   labs(x = "Tamanho da amostra", y = "Precisão",
-       title = "Precisão da variância em amostras de diferentes tamanhos",
-       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos",
+       title = "Precisão da variância em amostras \nde diferentes tamanhos",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap \ne métodos paramétricos",
        colour = "Método") +
   scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
 ```
 
 Depois, foram feitas 10 diferentes execuções de Monte Carlo usando uma amostra pequena, de tamanho 100, para testar a estabilidade dos valores apresentados em um cenário levemente desfavorável.
 
-```{r gráfico 3, echo=FALSE}
+```{r gráfico 3, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 
 normal_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
@@ -117,7 +117,7 @@ onde,
 $$\binom{n}{x}= \frac{n!}{x!(n-x)!}$$
 A seguir, é possível observar um exemplo de gráfico de densidade de probabilidade da distribuição binomial:
 
-```{r gráfico 4, echo=FALSE} 
+```{r gráfico 4, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE} 
 tibble(x = 0:12, y = dbinom(0:12, 12, 0.5)) %>% 
   ggplot(aes(x = x, y=y)) +
   geom_line() +
@@ -128,7 +128,7 @@ tibble(x = 0:12, y = dbinom(0:12, 12, 0.5)) %>%
 
 Assim como para a distribuição anterior, o gráfico a seguir foi construído para comparar o desempenho dos métodos com diferentes tamanhos de amostra (10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000) e possuindo p como 0.5:
 
-```{r gráfico 5, echo=FALSE}
+```{r gráfico 5, fig.align="center", fig.width = 6, fig.height = 3, echo=FALSE}
 binomial_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -146,7 +146,7 @@ A partir do mesmo é possível observar como o método bootstrap é mais sensív
 
 Em seguida, foram feitas 10 diferentes execuções de Monte Carlo para uma amostra de tamanho 100, para observar o comportamento para um cenário levemente desfavorável (pequeno):
 
-```{r gráfico 6, echo=FALSE}
+```{r gráfico 6, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 binomial_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
   ggplot(aes(x = Metodo, y = Resultado)) +
@@ -162,7 +162,7 @@ A função exponencial tem função densidade:
 $$f(x)=\lambda \cdot e^{-\lambda\cdot x}\ \ \ \forall x\geq 0$$ 
 Tendo isto em mente, temos o grafico da função exponencial que tem como parâmetros $$E(X)=\frac{1}{\lambda}$$ e variância $$V(X)=\frac{1}{\lambda^2}$$
 
-```{r gráfico 7, echo=FALSE}
+```{r gráfico 7, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 tibble(x = 0:8) %>% 
   ggplot(aes(x)) +
   stat_function(fun = dexp) +
@@ -171,7 +171,8 @@ tibble(x = 0:8) %>%
 
 ```
 
-```{r gráfico 8, echo=FALSE}
+
+```{r gráfico 8, fig.align="center", fig.width = 7, fig.height = 4, echo=FALSE}
 exponencial_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -179,13 +180,14 @@ exponencial_por_n_df %>%
   geom_path() +
   geom_point() +
   labs(x = "Tamanho da amostra", y = "Precisão",
-       title = "Precisão da variância em amostras de diferentes tamanhos\ndistribuição exponencial",
+       title = "Precisão da variância em amostras de \ndiferentes tamanhos distribuição exponencial",
        subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos no método\ndistribuição exponencial",
        colour = "Método") +
   scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
 ```
 
-```{r gráfico 9, echo=FALSE}
+
+```{r gráfico 9, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 
 exponencial_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Exponencial", values_to = "Resultado") %>%
