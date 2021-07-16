@@ -170,7 +170,8 @@ tibble(x = 0:8) %>%
        x = "x", y = "f(x)")
 
 ```
-
+<br/>
+<br/>
 
 ```{r gráfico 8, fig.align="center", fig.width = 7, fig.height = 4, echo=FALSE}
 exponencial_por_n_df %>%
@@ -185,8 +186,8 @@ exponencial_por_n_df %>%
        colour = "Método") +
   scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
 ```
-
-
+<br/>
+<br/>
 ```{r gráfico 9, fig.align="center", fig.width = 5, fig.height = 3, echo=FALSE}
 
 exponencial_100_nvezes_df %>% 
@@ -194,6 +195,8 @@ exponencial_100_nvezes_df %>%
   ggplot(aes(x = Exponencial, y = Resultado)) +
   geom_point()
 ```
+
+Em comparação com as distribuições anteriroes temos duas diferenças principais. A primeira delas é a eficiência relativa do Bootstrap em relação aos métodos paramétricos, proporcionalmente, a eficiência não passa de 85%, enquanto nas outras distribuições a eficiência é maior que 90%. A grande surpresa observada é o comportamento oposto às distribuições binomial e normal, no método paramétrico, não chegando a 66% de eficiência. Quanto à precisão, percebe-se que o Bootstrap apresenta resultados tão bons quanto os resultado das outras distribuições.
 
 ## Comparação geral
 
