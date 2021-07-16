@@ -107,18 +107,6 @@ normal_100_nvezes_df %>%
 
 ```
 
-<<<<<<< HEAD
-### Distribuição exponencial
-
-A função exponencial tem função densidade:
-$$f(x)=\lambda \cdot e^{-\lambda\cdot x}\ \ \ \forall x\geq 0$$ 
-Tendo isto em mente, temos o grafico da função exponencial que tem como parâmetros $$E(X)=\frac{1}{\lambda}$$ e variância $$V(X)=\frac{1}{\lambda^2}$$
-```{r}
-tibble(x = 0:8) %>% 
-  ggplot(aes(x)) +
-  stat_function(fun = dexp) +
-  labs(title = "Densidade de probabilidade da distribuição exponencial",
-=======
 ### Distribuição binomial
 
 A distribuição binomial é uma distribuição discreta de probabilidade, estando associada a um experimento de múltiplas etapas. A mesma possui como função de densidade:
@@ -134,37 +122,20 @@ tibble(x = 0:12, y = dbinom(0:12, 12, 0.5)) %>%
   ggplot(aes(x = x, y=y)) +
   geom_line() +
   labs(title = "Densidade de probabilidade da distribuição binomial",
->>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
        x = "x", y = "f(x)")
 
 ```
 
-<<<<<<< HEAD
-```{r gráfico 22}
-exponencial_por_n_df %>%
-=======
 Assim como para a distribuição anterior, o gráfico a seguir foi construído para comparar o desempenho dos métodos com diferentes tamanhos de amostra (10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000) e possuindo p como 0.5:
 
 ```{r gráfico 5, echo=FALSE}
 binomial_por_n_df %>%
->>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
   ggplot(aes(x, valor, color = tipo)) +
   geom_path() +
   geom_point() +
   labs(x = "Tamanho da amostra", y = "Precisão",
-<<<<<<< HEAD
-       title = "Precisão da variância em amostras de diferentes tamanhos\ndistribuição exponencial",
-       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos no método\ndistribuição exponencial",
-       colour = "Método") +
-  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
-```
-```{r gráfico 33}
-
-exponencial_100_nvezes_df %>% 
-  pivot_longer(cols = starts_with("resultados"), names_to = "Exponencial", values_to = "Resultado") %>% 
-=======
        title = "Precisão da variância em amostras de diferentes tamanhos",
        subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos",
        colour = "Método") +
@@ -176,21 +147,51 @@ A partir do mesmo é possível observar como o método bootstrap é mais sensív
 Em seguida, foram feitas 10 diferentes execuções de Monte Carlo para uma amostra de tamanho 100, para observar o comportamento para um cenário levemente desfavorável (pequeno):
 
 ```{r gráfico 6, echo=FALSE}
-
 binomial_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
->>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
   ggplot(aes(x = Metodo, y = Resultado)) +
   geom_point()
+```
+
+Como pode ser contemplado, pouco se diferiu os resultados obtidos pelos intervalos de confiança para as distribuições normal e binomial.
+
+
+### Distribuição exponencial
+
+A função exponencial tem função densidade:
+$$f(x)=\lambda \cdot e^{-\lambda\cdot x}\ \ \ \forall x\geq 0$$ 
+Tendo isto em mente, temos o grafico da função exponencial que tem como parâmetros $$E(X)=\frac{1}{\lambda}$$ e variância $$V(X)=\frac{1}{\lambda^2}$$
+
+```{r gráfico 7, echo=FALSE}
+tibble(x = 0:8) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = dexp) +
+  labs(title = "Densidade de probabilidade da distribuição exponencial",
+       x = "x", y = "f(x)")
 
 ```
 
-<<<<<<< HEAD
+```{r gráfico 8, echo=FALSE}
+exponencial_por_n_df %>%
+  pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
+  mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
+  ggplot(aes(x, valor, color = tipo)) +
+  geom_path() +
+  geom_point() +
+  labs(x = "Tamanho da amostra", y = "Precisão",
+       title = "Precisão da variância em amostras de diferentes tamanhos\ndistribuição exponencial",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos no método\ndistribuição exponencial",
+       colour = "Método") +
+  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
+```
 
+```{r gráfico 9, echo=FALSE}
 
-=======
-Como pode ser contemplado, pouco se diferiu os resultados obtidos pelos intervalos de confiança para as distribuições normal e binomial.
->>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
+exponencial_100_nvezes_df %>% 
+  pivot_longer(cols = starts_with("resultados"), names_to = "Exponencial", values_to = "Resultado") %>%
+  ggplot(aes(x = Exponencial, y = Resultado)) +
+  geom_point()
+```
 
 ## Comparação geral
 
@@ -317,8 +318,29 @@ binomial_100_nvezes_df <- tibble(
   resultados_param = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 2))
 )
 
+# 3.6 Gráfico 8 ----
+exponencial_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
 
-# 3. Tabela 1 ----
+pb <- progress_bar$new(total = length(exponencial_por_n_df$x))
+exponencial_por_n <- map(exponencial_por_n_df$x, ~{pb$tick(); montecarlo(.x,
+                                                                         rexp,
+                                                                         rate=2,
+                                                                         theo_val= .25)})
+
+exponencial_por_n_df <- exponencial_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(exponencial_por_n_df), ~pluck(exponencial_por_n, .x, 1)),
+         param = map_dbl(1:nrow(exponencial_por_n_df), ~pluck(exponencial_por_n, .x, 2)))
+
+# 3.7 Gráfico 9 ----
+exponencial_100_nvezes <- map(1:10, ~montecarlo(100, rexp, rate=2, theo_val= .25))
+
+exponencial_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(exponencial_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(exponencial_100_nvezes, .x, 2))
+)
+
+
+# 3.8 Tabela 1 ----
 resultados_gerais <- tibble(
   normal = unlist(montecarlo(1000, rnorm, 1)),
   exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
