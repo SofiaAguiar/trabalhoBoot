@@ -103,6 +103,45 @@ normal_100_nvezes_df %>%
 
 ```
 
+### Distribuição exponencial
+
+A função exponencial tem função densidade:
+$$f(x)=\lambda \cdot e^{-\lambda\cdot x}\ \ \ \forall x\geq 0$$ 
+Tendo isto em mente, temos o grafico da função exponencial que tem como parâmetros $$E(X)=\frac{1}{\lambda}$$ e variância $$V(X)=\frac{1}{\lambda^2}$$
+```{r}
+tibble(x = 0:8) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = dexp) +
+  labs(title = "Densidade de probabilidade da distribuição exponencial",
+       x = "x", y = "f(x)")
+
+```
+
+```{r gráfico 22}
+exponencial_por_n_df %>%
+  pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
+  mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
+  ggplot(aes(x, valor, color = tipo)) +
+  geom_path() +
+  geom_point() +
+  labs(x = "Tamanho da amostra", y = "Precisão",
+       title = "Precisão da variância em amostras de diferentes tamanhos\ndistribuição exponencial",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos no método\ndistribuição exponencial",
+       colour = "Método") +
+  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
+```
+```{r gráfico 33}
+
+exponencial_100_nvezes_df %>% 
+  pivot_longer(cols = starts_with("resultados"), names_to = "Exponencial", values_to = "Resultado") %>% 
+  ggplot(aes(x = Metodo, y = Resultado)) +
+  geom_point()
+
+```
+
+
+
+
 ## Comparação geral
 
 Por fim, para o tamanho 1000, são sintetizados, em uma tabela, os resultados dos métodos paramétrico e não-paramétrico das três distribuições abordadas: normal (padrão), exponencial (com taxa 2) e binomial (com n = 1000 e p = 0.5).
