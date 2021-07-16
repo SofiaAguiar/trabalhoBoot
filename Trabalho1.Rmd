@@ -44,18 +44,22 @@ Segundo Horiwitz (2001) O bootstrap é uma técnica prática que está pronta pa
 A função VarTest é uma função paramétrica nativa do R, e ambas foram comparadas para comparação de desempenho.
 
 Para ajudar nessa comparação fez-se necessário  a criação de um mecanismo da programação através da função MonteCarlo. Essa foi realizada em três principais etapas, sendo elas:
-Etapa 1 : Geração de uma amostra  bootstrap de tamanho 200, {Xi *: i = 1, ..., 200}, amostrando a distribuição correspondente a Fn aleatoriamente.
-Etapa 2: Calculando T200* º T200 (X1* ,…, X200*).
-Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 * £ t (ou seja, a proporção de repetições em que esse evento ocorre).
+<br/>
+Etapa 1 : Geração de uma amostra  bootstrap de tamanho 200, {Xi : i = 1, ..., 200}, amostrando a distribuição correspondente a Fn aleatoriamente.
+<br/>
+Etapa 2: Calculando T200 º T200 (X1 , … , X200).
+<br/>
+Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 £ t (ou seja, a proporção de repetições em que esse evento ocorre).
 
-Ele foi aplicado em Tres cenários de distribuição diferentes diferentes:
-- Cenário 1: Distribuição normal:
+Ele foi aplicado em três cenários de distribuições diferentes:
+
+- Cenário 1: Distribuição normal
 
 - Cenário 2: Distribuição Binomial 
 
-- Cenário 3:Distribuição Exponencial 
+- Cenário 3: Distribuição Exponencial 
 
-E em cada cenário da simulação foi considerado três tamanhos amostrais(50,500,5000), para assim obter-se uma comparação entre os cenários, comparar a desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra.
+Segundo Booth e Sarkar (1998) o número de reamostragens deve, de fato, ser determinado pelo coeficiente de variação condicional, envolvendo apenas a variabilidade da reamostragem. A análise condicional é baseada na crença de que o erro de Monte Carlo não deve determinar as conclusões de uma análise estatística. Diante disso em cada cenário da simulação foi considerado dez tamanhos amostrais(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000), para assim obter-se uma comparação entre os cenários, comparar seus desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra. 
 
 ## Estudo de simulação
 
@@ -65,7 +69,7 @@ A distribuição normal tem função de densidade:
 $$f(x)=\frac{1}{\sigma\sqrt{2\pi}}\cdot \exp\bigg(-\frac 12 \cdot \frac{(x-\mu )^2}{\sigma^2}\bigg)$$
 Para todo _x_ real, em que $\sigma$ e $\mu$ são, respectivamente, a média e o desvio-padrão. Nas simulações deste trabalho, foi utilizada a normal padrão, i.e., a normal com média 0 e desvio-padrão 1. Um exemplo de gráfico de densidade de probabilidade da distribuição normal:
 
-```{r}
+```{r echo=FALSE} 
 tibble(x = -4:4) %>% 
   ggplot(aes(x)) +
   stat_function(fun = dnorm) +
@@ -78,7 +82,7 @@ A estimação de variância pela função _varTest_ do pacote _EnvStats_, usada 
 
 Iniciamente, foi feito um gráfico para comparar o desempenho dos métodos com variados tamanhos de amostra: 10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000.
 
-```{r gráfico 2}
+```{r gráfico 2, echo=FALSE}
 normal_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -94,7 +98,7 @@ normal_por_n_df %>%
 
 Depois, foram feitas 10 diferentes execuções de Monte Carlo usando uma amostra pequena, de tamanho 100, para testar a estabilidade dos valores apresentados em um cenário levemente desfavorável.
 
-```{r gráfico 3}
+```{r gráfico 3, echo=FALSE}
 
 normal_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
@@ -103,6 +107,7 @@ normal_100_nvezes_df %>%
 
 ```
 
+<<<<<<< HEAD
 ### Distribuição exponencial
 
 A função exponencial tem função densidade:
@@ -113,18 +118,43 @@ tibble(x = 0:8) %>%
   ggplot(aes(x)) +
   stat_function(fun = dexp) +
   labs(title = "Densidade de probabilidade da distribuição exponencial",
+=======
+### Distribuição binomial
+
+A distribuição binomial é uma distribuição discreta de probabilidade, estando associada a um experimento de múltiplas etapas. A mesma possui como função de densidade:
+
+$$p_{X}(x)= \binom{n}{x}p^{x}(1-p)^{n-x}$$
+
+onde,
+$$\binom{n}{x}= \frac{n!}{x!(n-x)!}$$
+A seguir, é possível observar um exemplo de gráfico de densidade de probabilidade da distribuição binomial:
+
+```{r gráfico 4, echo=FALSE} 
+tibble(x = 0:12, y = dbinom(0:12, 12, 0.5)) %>% 
+  ggplot(aes(x = x, y=y)) +
+  geom_line() +
+  labs(title = "Densidade de probabilidade da distribuição binomial",
+>>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
        x = "x", y = "f(x)")
 
 ```
 
+<<<<<<< HEAD
 ```{r gráfico 22}
 exponencial_por_n_df %>%
+=======
+Assim como para a distribuição anterior, o gráfico a seguir foi construído para comparar o desempenho dos métodos com diferentes tamanhos de amostra (10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000) e possuindo p como 0.5:
+
+```{r gráfico 5, echo=FALSE}
+binomial_por_n_df %>%
+>>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
   ggplot(aes(x, valor, color = tipo)) +
   geom_path() +
   geom_point() +
   labs(x = "Tamanho da amostra", y = "Precisão",
+<<<<<<< HEAD
        title = "Precisão da variância em amostras de diferentes tamanhos\ndistribuição exponencial",
        subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos no método\ndistribuição exponencial",
        colour = "Método") +
@@ -134,19 +164,39 @@ exponencial_por_n_df %>%
 
 exponencial_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Exponencial", values_to = "Resultado") %>% 
+=======
+       title = "Precisão da variância em amostras de diferentes tamanhos",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos",
+       colour = "Método") +
+  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
+```
+
+A partir do mesmo é possível observar como o método bootstrap é mais sensível a amostras de tamanhos pequenos. 
+
+Em seguida, foram feitas 10 diferentes execuções de Monte Carlo para uma amostra de tamanho 100, para observar o comportamento para um cenário levemente desfavorável (pequeno):
+
+```{r gráfico 6, echo=FALSE}
+
+binomial_100_nvezes_df %>% 
+  pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
+>>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
   ggplot(aes(x = Metodo, y = Resultado)) +
   geom_point()
 
 ```
 
+<<<<<<< HEAD
 
 
+=======
+Como pode ser contemplado, pouco se diferiu os resultados obtidos pelos intervalos de confiança para as distribuições normal e binomial.
+>>>>>>> 82d8f0fb61dbd1fe5881a6f3d5efd34f58d9e05f
 
 ## Comparação geral
 
 Por fim, para o tamanho 1000, são sintetizados, em uma tabela, os resultados dos métodos paramétrico e não-paramétrico das três distribuições abordadas: normal (padrão), exponencial (com taxa 2) e binomial (com n = 1000 e p = 0.5).
 
-```{r tabela 1}
+```{r tabela 1, echo=FALSE}
 
 resultados_gerais %>%
   mutate(Método = c("Bootstrap", "Paramétrico")) %>% 
@@ -238,7 +288,37 @@ normal_100_nvezes_df <- tibble(
   resultados_param = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 2))
 )
 
-# 3.3 Tabela 1 ----
+# 3.4 Gráfico 5 ----
+var_binom=function(n,p){
+  return(n * p * (1 - p))
+}
+
+binomial_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(binomial_por_n_df$x))
+binomial_por_n <- map(binomial_por_n_df$x, ~{pb$tick(); montecarlo(.x,
+                                                                   rbinom,
+                                                                   theo_val=var_binom(.x, 0.5),
+                                                                   prob=0.5,
+                                                                   size=.x)})
+binomial_por_n_df <- binomial_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 1)),
+         param = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 2)))
+
+# 3.5 Gráfico 6 ----
+binomial_100_nvezes <- map(1:10, ~montecarlo(100,
+                                             rbinom,
+                                             theo_val=var_binom(100, 0.5),
+                                             prob=0.5,
+                                             size=100))
+
+binomial_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 2))
+)
+
+
+# 3. Tabela 1 ----
 resultados_gerais <- tibble(
   normal = unlist(montecarlo(1000, rnorm, 1)),
   exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
@@ -246,3 +326,9 @@ resultados_gerais <- tibble(
 )
 
 ```
+
+## Referências bibliográficas
+BOOTH, James G.; SARKAR, Somnath. Monte Carlo approximation of bootstrap variances. The American Statistician, v. 52, n. 4, p. 354-357, 1998.
+<br/>
+<br/>
+HOROWITZ, Joel L. The bootstrap. In: Handbook of econometrics. Elsevier, 2001. p. 3159-3228.
