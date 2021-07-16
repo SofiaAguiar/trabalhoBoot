@@ -44,18 +44,22 @@ Segundo Horiwitz (2001) O bootstrap é uma técnica prática que está pronta pa
 A função VarTest é uma função paramétrica nativa do R, e ambas foram comparadas para comparação de desempenho.
 
 Para ajudar nessa comparação fez-se necessário  a criação de um mecanismo da programação através da função MonteCarlo. Essa foi realizada em três principais etapas, sendo elas:
-Etapa 1 : Geração de uma amostra  bootstrap de tamanho 200, {Xi *: i = 1, ..., 200}, amostrando a distribuição correspondente a Fn aleatoriamente.
-Etapa 2: Calculando T200* º T200 (X1* ,…, X200*).
-Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 * £ t (ou seja, a proporção de repetições em que esse evento ocorre).
+<br/>
+Etapa 1 : Geração de uma amostra  bootstrap de tamanho 200, {Xi : i = 1, ..., 200}, amostrando a distribuição correspondente a Fn aleatoriamente.
+<br/>
+Etapa 2: Calculando T200 º T200 (X1 , … , X200).
+<br/>
+Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 £ t (ou seja, a proporção de repetições em que esse evento ocorre).
 
-Ele foi aplicado em Tres cenários de distribuição diferentes diferentes:
-- Cenário 1: Distribuição normal:
+Ele foi aplicado em três cenários de distribuições diferentes:
+
+- Cenário 1: Distribuição normal
 
 - Cenário 2: Distribuição Binomial 
 
-- Cenário 3:Distribuição Exponencial 
+- Cenário 3: Distribuição Exponencial 
 
-E em cada cenário da simulação foi considerado três tamanhos amostrais(50,500,5000), para assim obter-se uma comparação entre os cenários, comparar a desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra.
+Segundo Booth e Sarkar (1998) o número de reamostragens deve, de fato, ser determinado pelo coeficiente de variação condicional, envolvendo apenas a variabilidade da reamostragem. A análise condicional é baseada na crença de que o erro de Monte Carlo não deve determinar as conclusões de uma análise estatística. Diante disso em cada cenário da simulação foi considerado três tamanhos amostrais(50,500,5000), para assim obter-se uma comparação entre os cenários, comparar seus desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra. 
 
 ## Estudo de simulação
 
@@ -207,3 +211,9 @@ resultados_gerais <- tibble(
 )
 
 ```
+
+## Referências bibliográficas
+BOOTH, James G.; SARKAR, Somnath. Monte Carlo approximation of bootstrap variances. The American Statistician, v. 52, n. 4, p. 354-357, 1998.
+<br/>
+<br/>
+HOROWITZ, Joel L. The bootstrap. In: Handbook of econometrics. Elsevier, 2001. p. 3159-3228.
