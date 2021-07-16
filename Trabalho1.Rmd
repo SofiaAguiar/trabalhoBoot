@@ -49,6 +49,7 @@ Etapa 2: Calculando T200* º T200 (X1* ,…, X200*).
 Etapa 3: os resultados de muitas repetições das etapas 1 e 2 foram usados para calcular o empírico probabilidade do evento T200 * £ t (ou seja, a proporção de repetições em que esse evento ocorre).
 
 Ele foi aplicado em Tres cenários de distribuição diferentes diferentes:
+
 - Cenário 1: Distribuição normal:
 
 - Cenário 2: Distribuição Binomial 
@@ -65,7 +66,7 @@ A distribuição normal tem função de densidade:
 $$f(x)=\frac{1}{\sigma\sqrt{2\pi}}\cdot \exp\bigg(-\frac 12 \cdot \frac{(x-\mu )^2}{\sigma^2}\bigg)$$
 Para todo _x_ real, em que $\sigma$ e $\mu$ são, respectivamente, a média e o desvio-padrão. Nas simulações deste trabalho, foi utilizada a normal padrão, i.e., a normal com média 0 e desvio-padrão 1. Um exemplo de gráfico de densidade de probabilidade da distribuição normal:
 
-```{r}
+```{r echo=FALSE} 
 tibble(x = -4:4) %>% 
   ggplot(aes(x)) +
   stat_function(fun = dnorm) +
@@ -78,7 +79,7 @@ A estimação de variância pela função _varTest_ do pacote _EnvStats_, usada 
 
 Iniciamente, foi feito um gráfico para comparar o desempenho dos métodos com variados tamanhos de amostra: 10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000.
 
-```{r gráfico 2}
+```{r gráfico 2, echo=FALSE}
 normal_por_n_df %>%
   pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
   mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
@@ -94,7 +95,7 @@ normal_por_n_df %>%
 
 Depois, foram feitas 10 diferentes execuções de Monte Carlo usando uma amostra pequena, de tamanho 100, para testar a estabilidade dos valores apresentados em um cenário levemente desfavorável.
 
-```{r gráfico 3}
+```{r gráfico 3, echo=FALSE}
 
 normal_100_nvezes_df %>% 
   pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
@@ -103,11 +104,58 @@ normal_100_nvezes_df %>%
 
 ```
 
+### Distribuição binomial
+
+A distribuição binomial é uma distribuição discreta de probabilidade, estando associada a um experimento de múltiplas etapas. A mesma possui como função de densidade:
+
+$$p_{X}(x)= \binom{n}{x}p^{x}(1-p)^{n-x}$$
+
+onde,
+$$\binom{n}{x}= \frac{n!}{x!(n-x)!}$$
+A seguir, é possível observar um exemplo de gráfico de densidade de probabilidade da distribuição binomial:
+
+```{r echo=FALSE} 
+
+
+
+```
+
+Assim como para a distribuição anterior, o gráfico a seguir foi construído para comparar o desempenho dos métodos com diferentes tamanhos de amostra (10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000) e possuindo p como 0.5:
+
+```{r gráfico 4, echo=FALSE}
+binomial_por_n_df %>%
+  pivot_longer(cols = c("bootstrap", "param"), names_to = "tipo", values_to = "valor") %>% 
+  mutate(tipo = ifelse(tipo == "bootstrap", "Bootstrap", "Paramétrico")) %>% 
+  ggplot(aes(x, valor, color = tipo)) +
+  geom_path() +
+  geom_point() +
+  labs(x = "Tamanho da amostra", y = "Precisão",
+       title = "Precisão da variância em amostras de diferentes tamanhos",
+       subtitle = "Simulações de Monte Carlo comparando Bootstrap e métodos paramétricos",
+       colour = "Método") +
+  scale_x_continuous(breaks = c(100, 500, 1000, 2000, 3000, 4000, 5000))
+```
+
+A partir do mesmo é possível observar como o método bootstrap é mais sensível a amostras de tamanhos pequenos. 
+
+Em seguida, foram feitas 10 diferentes execuções de Monte Carlo para uma amostra de tamanho 100, para observar o comportamento para um cenário levemente desfavorável (pequeno):
+
+```{r gráfico 5, echo=FALSE}
+
+binomial_100_nvezes_df %>% 
+  pivot_longer(cols = starts_with("resultados"), names_to = "Metodo", values_to = "Resultado") %>% 
+  ggplot(aes(x = Metodo, y = Resultado)) +
+  geom_point()
+
+```
+
+Como pode ser contemplado, pouco se diferiu os resultados obtidos pelos intervalos de confiança para as distribuições normal e binomial.
+
 ## Comparação geral
 
 Por fim, para o tamanho 1000, são sintetizados, em uma tabela, os resultados dos métodos paramétrico e não-paramétrico das três distribuições abordadas: normal (padrão), exponencial (com taxa 2) e binomial (com n = 1000 e p = 0.5).
 
-```{r tabela 1}
+```{r tabela 1, echo=FALSE}
 
 resultados_gerais %>%
   mutate(Método = c("Bootstrap", "Paramétrico")) %>% 
@@ -199,7 +247,37 @@ normal_100_nvezes_df <- tibble(
   resultados_param = map_dbl(1:10, ~pluck(normal_100_nvezes, .x, 2))
 )
 
-# 3.3 Tabela 1 ----
+# 3.4 Gráfico 4 ----
+var_binom=function(n,p){
+  return(n * p * (1 - p))
+}
+
+binomial_por_n_df <- tibble(x = c(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000))
+
+pb <- progress_bar$new(total = length(binomial_por_n_df$x))
+binomial_por_n <- map(binomial_por_n_df$x, ~{pb$tick(); montecarlo(.x,
+                                                                   rbinom,
+                                                                   theo_val=var_binom(.x, 0.5),
+                                                                   prob=0.5,
+                                                                   size=.x)})
+binomial_por_n_df <- binomial_por_n_df %>% 
+  mutate(bootstrap = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 1)),
+         param = map_dbl(1:nrow(binomial_por_n_df), ~pluck(binomial_por_n, .x, 2)))
+
+# 3.5 Gráfico 5 ----
+binomial_100_nvezes <- map(1:10, ~montecarlo(100,
+                                             rbinom,
+                                             theo_val=var_binom(100, 0.5),
+                                             prob=0.5,
+                                             size=100))
+
+binomial_100_nvezes_df <- tibble(
+  resultados_boots = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 1)),
+  resultados_param = map_dbl(1:10, ~pluck(binomial_100_nvezes, .x, 2))
+)
+
+
+# 3. Tabela 1 ----
 resultados_gerais <- tibble(
   normal = unlist(montecarlo(1000, rnorm, 1)),
   exponencial = unlist(montecarlo(1000, rexp, .25, rate = 2)),
