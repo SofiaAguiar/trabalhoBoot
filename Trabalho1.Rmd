@@ -59,7 +59,7 @@ Ele foi aplicado em três cenários de distribuições diferentes:
 
 - Cenário 3: Distribuição Exponencial 
 
-Segundo Booth e Sarkar (1998) o número de reamostragens deve, de fato, ser determinado pelo coeficiente de variação condicional, envolvendo apenas a variabilidade da reamostragem. A análise condicional é baseada na crença de que o erro de Monte Carlo não deve determinar as conclusões de uma análise estatística. Diante disso em cada cenário da simulação foi considerado três tamanhos amostrais(50,500,5000), para assim obter-se uma comparação entre os cenários, comparar seus desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra. 
+Segundo Booth e Sarkar (1998) o número de reamostragens deve, de fato, ser determinado pelo coeficiente de variação condicional, envolvendo apenas a variabilidade da reamostragem. A análise condicional é baseada na crença de que o erro de Monte Carlo não deve determinar as conclusões de uma análise estatística. Diante disso em cada cenário da simulação foi considerado dez tamanhos amostrais(10, 50, 100, 250, 500, 1000, 2000, 3000, 4000 e 5000), para assim obter-se uma comparação entre os cenários, comparar seus desempenho de todos para diferentes tamanhos de amostra e assim avaliar qual é melhor para cada cenário e tamanho de amostra. 
 
 ## Estudo de simulação
 
